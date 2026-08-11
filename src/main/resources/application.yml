@@ -19,7 +19,7 @@ spring:
     enabled: true
 app:
   jwt-secret: ${JWT_SECRET:dev-only-secret-change-this-32-chars}
-  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000,http://127.0.0.1:3000}
   admin-email: ${ADMIN_EMAIL:admin@nobre.local}
   cookie-secure: ${COOKIE_SECURE:false}
   cookie-same-site: ${COOKIE_SAME_SITE:Lax}
