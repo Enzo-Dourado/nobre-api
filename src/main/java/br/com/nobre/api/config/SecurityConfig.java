@@ -1,5 +1,6 @@
 package br.com.nobre.api.config;
 
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,8 @@ public class SecurityConfig {
 
     @Bean CorsConfigurationSource corsConfigurationSource(@Value("${app.frontend-url}") String frontendUrl) {
         var cors = new CorsConfiguration();
-        cors.setAllowedOrigins(List.of(frontendUrl));
+        cors.setAllowedOrigins(Arrays.stream(frontendUrl.split(","))
+            .map(String::trim).filter(origin -> !origin.isEmpty()).toList());
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(List.of("Content-Type"));
         cors.setAllowCredentials(true);

@@ -1,0 +1,37 @@
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: nobre
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - nobre_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nobre"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: jdbc:postgresql://database:5432/nobre
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-this-32-chars}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@nobre.local}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000,http://127.0.0.1:3000}
+      COOKIE_SECURE: "false"
+      COOKIE_SAME_SITE: Lax
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  nobre_postgres_data:
+
